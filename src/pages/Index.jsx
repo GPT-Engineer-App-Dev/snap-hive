@@ -11,6 +11,7 @@ const [photos, setPhotos] = useState([
   "https://via.placeholder.com/150",
 ]);
 
+const [likes, setLikes] = useState(Array(photos.length).fill(0));
 const [selectedFile, setSelectedFile] = useState(null);
 
 const handleFileChange = (event) => {
@@ -22,9 +23,16 @@ const handleUpload = () => {
     const reader = new FileReader();
     reader.onloadend = () => {
       setPhotos([...photos, reader.result]);
+      setLikes([...likes, 0]);
     };
     reader.readAsDataURL(selectedFile);
   }
+};
+
+const handleLike = (index) => {
+  const newLikes = [...likes];
+  newLikes[index] += 1;
+  setLikes(newLikes);
 };
 
 const Index = () => {
@@ -45,6 +53,8 @@ const Index = () => {
           {photos.map((src, index) => (
             <GridItem key={index}>
               <Image src={src} alt={`Photo ${index + 1}`} borderRadius="md" />
+              <Button onClick={() => handleLike(index)} mt={2}>Like</Button>
+              <Text mt={1}>{likes[index]} {likes[index] === 1 ? 'like' : 'likes'}</Text>
             </GridItem>
           ))}
         </Grid>
